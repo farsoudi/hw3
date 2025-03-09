@@ -67,9 +67,11 @@ void dealloc(Node* head)
 //   function object struct declarations
 // -----------------------------------------------
 
-
-
-
+struct IsOdd {
+    bool operator()(int value) {
+        return value % 2 != 0;
+    }
+};
 
 int main(int argc, char* argv[])
 {
@@ -78,18 +80,30 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // -----------------------------------------------
-    // Feel free to update any code below this point
-    // -----------------------------------------------
     Node* head = readList(argv[1]);
     cout << "Original list: ";
     print(head);
 
-    // Test out your linked list code
+    Node* smaller = nullptr;
+    Node* larger = nullptr;
+    llpivot(head, smaller, larger, 9);
 
+    cout << "smaller/equal 2 pivot: ";
+    print(smaller);
+    cout << "larger than pivot: ";
+    print(larger);
 
+    dealloc(smaller);
+    dealloc(larger);
 
-    
+    head = readList(argv[1]);
+
+    Node* filtered = llfilter(head, IsOdd());
+
+    cout << "filtered list of evens: ";
+    print(filtered);
+
+    dealloc(filtered);
+
     return 0;
-
 }

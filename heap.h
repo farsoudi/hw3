@@ -61,7 +61,9 @@ public:
 
 private:
   /// Add whatever helper functions and data members you need below
-
+  std::vector<T> data_;
+  int m_;
+  PComparator comp_;
 
 
 
@@ -81,14 +83,11 @@ T const & Heap<T,PComparator>::top() const
     // ================================
     // throw the appropriate exception
     // ================================
-
-
+    throw std::underflow_error("Heap is empty");
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
-
-
-
+  return data_.front();
 }
 
 
@@ -101,12 +100,90 @@ void Heap<T,PComparator>::pop()
     // ================================
     // throw the appropriate exception
     // ================================
-
+    throw std::underflow_error("Heap is empty");
 
   }
+}
 
 
+template <typename T, typename PComparator>
+Heap<T, PComparator>::Heap(int m, PComparator c)
+  : m_(m), comp_(c)
+{
+}
 
+template <typename T, typename PComparator>
+Heap<T, PComparator>::~Heap()
+{
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::push(const T& item)
+{
+  data_.push_back(item);
+  size_t idx = data_.size() - 1;
+  while (idx > 0)
+  {
+    size_t parent = (idx - 1) / m_;
+    if (comp_(data_[idx], data_[parent]))
+    {
+      std::swap(data_[idx], data_[parent]);
+      idx = parent;
+    }
+    else
+    {
+      break;
+    }
+  }
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::pop()
+{
+  if (empty())
+  {
+    throw std::underflow_error("Heap is empty");
+  }
+  data_[0] = data_.back();
+  data_.pop_back();
+  size_t idx = 0;
+  while (true)
+  {
+    size_t child = m_ * idx + 1;
+    if (child >= data_.size())
+    {
+      break;
+    }
+    size_t minChild = child;
+    for (size_t i = 1; i < m_; ++i)
+    {
+      if (child + i < data_.size() && comp_(data_[child + i], data_[minChild]))
+      {
+        minChild = child + i;
+      }
+    }
+    if (comp_(data_[minChild], data_[idx]))
+    {
+      std::swap(data_[idx], data_[minChild]);
+      idx = minChild;
+    }
+    else
+    {
+      break;
+    }
+  }
+}
+
+template <typename T, typename PComparator>
+bool Heap<T, PComparator>::empty() const
+{
+  return data_.empty();
+}
+
+template <typename T, typename PComparator>
+size_t Heap<T, PComparator>::size() const
+{
+  return data_.size();
 }
 
 
