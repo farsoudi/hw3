@@ -2,6 +2,7 @@
 #define HEAP_H
 #include <functional>
 #include <stdexcept>
+#include <vector>
 
 template <typename T, typename PComparator = std::less<T> >
 class Heap
@@ -87,7 +88,7 @@ T const & Heap<T,PComparator>::top() const
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
-  return data_.front();
+  return this->data_.front();
 }
 
 
@@ -105,14 +106,14 @@ Heap<T, PComparator>::~Heap()
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::push(const T& item)
 {
-  data_.push_back(item);
-  size_t idx = data_.size() - 1;
+  this->data_.push_back(item);
+  size_t idx = this->data_.size() - 1;
   while (idx > 0)
   {
-    size_t parent = (idx - 1) / m_;
-    if (comp_(data_[idx], data_[parent]))
+    size_t parent = (idx - 1) / this->m_;
+    if (this->comp_(this->data_[idx], this->data_[parent]))
     {
-      std::swap(data_[idx], data_[parent]);
+      std::swap(this->data_[idx], this->data_[parent]);
       idx = parent;
     }
     else
@@ -125,31 +126,31 @@ void Heap<T, PComparator>::push(const T& item)
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::pop()
 {
-  if (empty())
+  if (this->empty())
   {
     throw std::underflow_error("Heap is empty");
   }
-  data_[0] = data_.back();
-  data_.pop_back();
+  this->data_[0] = this->data_.back();
+  this->data_.pop_back();
   size_t idx = 0;
   while (true)
   {
-    size_t child = m_ * idx + 1;
-    if (child >= data_.size())
+    size_t child = this->m_ * idx + 1;
+    if (child >= this->data_.size())
     {
       break;
     }
     size_t minChild = child;
-    for (size_t i = 1; i < m_; ++i)
+    for (size_t i = 1; i < this->m_; ++i)
     {
-      if (child + i < data_.size() && comp_(data_[child + i], data_[minChild]))
+      if (child + i < this->data_.size() && this->comp_(this->data_[child + i], this->data_[minChild]))
       {
         minChild = child + i;
       }
     }
-    if (comp_(data_[minChild], data_[idx]))
+    if (this->comp_(this->data_[minChild], this->data_[idx]))
     {
-      std::swap(data_[idx], data_[minChild]);
+      std::swap(this->data_[idx], this->data_[minChild]);
       idx = minChild;
     }
     else
@@ -162,13 +163,13 @@ void Heap<T, PComparator>::pop()
 template <typename T, typename PComparator>
 bool Heap<T, PComparator>::empty() const
 {
-  return data_.empty();
+  return this->data_.empty();
 }
 
 template <typename T, typename PComparator>
 size_t Heap<T, PComparator>::size() const
 {
-  return data_.size();
+  return this->data_.size();
 }
 
 
