@@ -91,21 +91,6 @@ T const & Heap<T,PComparator>::top() const
 }
 
 
-// We will start pop() for you to handle the case of 
-// calling top on an empty heap
-template <typename T, typename PComparator>
-void Heap<T,PComparator>::pop()
-{
-  if(empty()){
-    // ================================
-    // throw the appropriate exception
-    // ================================
-    throw std::underflow_error("Heap is empty");
-
-  }
-}
-
-
 template <typename T, typename PComparator>
 Heap<T, PComparator>::Heap(int m, PComparator c)
   : m_(m), comp_(c)
