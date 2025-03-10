@@ -5,27 +5,52 @@
 // Provide your implementation of llpivot below
 //*********************************************
 
-void llpivot(Node *&head, Node *&smaller, Node *&larger, int pivot) {
-    if (!head) {
-        return;
+void llpivot(Node *&head, Node *&smaller, Node *&larger, int pivot)
+{
+    smaller = nullptr;
+    larger = nullptr;
+
+    Node* smallerTail = nullptr;
+    Node* largerTail  = nullptr;
+
+    Node* curr = head;
+    while (curr != nullptr)
+    {
+        Node* nextNode = curr->next;
+
+        curr->next = nullptr;
+
+        if (curr->val <= pivot)
+        {
+            if (smaller == nullptr)
+            {
+                smaller = curr;
+                smallerTail = curr;
+            }
+            else
+            {
+                smallerTail->next = curr;
+                smallerTail = curr;
+            }
+        }
+        else
+        {
+            if (larger == nullptr)
+            {
+                larger = curr;
+                largerTail = curr;
+            }
+            else
+            {
+                largerTail->next = curr;
+                largerTail = curr;
+            }
+        }
+
+        curr = nextNode;
     }
 
-    Node* next = head->next;
-    if (head->val <= pivot) {
-        #ifdef DEBUG
-        std::cout << "Adding " << head->val << " to smaller list" << std::endl;
-        #endif
-        head->next = smaller;
-        smaller = head;
-    } else {
-        #ifdef DEBUG
-        std::cout << "Adding " << head->val << " to larger list" << std::endl;
-        #endif
-        head->next = larger;
-        larger = head;
-    }
     head = nullptr;
-    llpivot(next, smaller, larger, pivot);
 }
 
 
